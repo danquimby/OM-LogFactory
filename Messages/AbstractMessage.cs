@@ -1,7 +1,23 @@
+// ***********************************************************************
+// Assembly         : OM-Logger
+// Author           : DanQuimby
+// Created          : 07-30-2015
+//
+// Last Modified By : DanQuimby
+// Last Modified On : 07-29-2015
+// ***********************************************************************
+// <copyright file="AbstractMessage.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 using System;
 using System.Diagnostics;
 using System.Reflection;
 
+/// <summary>
+/// The Messages namespace.
+/// </summary>
 namespace OM_Logger.Messages
 {
     /// <summary>
@@ -9,22 +25,61 @@ namespace OM_Logger.Messages
     /// </summary>
     public class AbstractMessage
     {
+        /// <summary>
+        /// The _ machine name
+        /// </summary>
         private string _MachineName;
+        /// <summary>
+        /// The _ application name
+        /// </summary>
         private string _AppName;
+        /// <summary>
+        /// The _ application domain friendly name
+        /// </summary>
         private string _AppDomainFriendlyName;
+        /// <summary>
+        /// The _ UTC time
+        /// </summary>
         private DateTime _UTCTime;
+        /// <summary>
+        /// The _ os platform
+        /// </summary>
         private string _OSPlatform;
+        /// <summary>
+        /// The _ os version
+        /// </summary>
         private string _OSVersion;
+        /// <summary>
+        /// The _ stack
+        /// </summary>
         private StackTrace _Stack;
+        /// <summary>
+        /// The _ user domain name
+        /// </summary>
         private string _UserDomainName;
+        /// <summary>
+        /// The _ user name
+        /// </summary>
         private string _UserName;
+        /// <summary>
+        /// The _ user interactive
+        /// </summary>
         private bool _UserInteractive;
+        /// <summary>
+        /// The _ runtime version
+        /// </summary>
         private string _RuntimeVersion;
 
+        /// <summary>
+        /// Initializes the new message.
+        /// </summary>
         protected virtual void InitNewMessage()
         {
         }
 
+        /// <summary>
+        /// Initializes the new message.
+        /// </summary>
         public void InitializeNewMessage()
         {
             _MachineName = Environment.MachineName;
@@ -48,6 +103,10 @@ namespace OM_Logger.Messages
             InitNewMessage();
         }
 
+        /// <summary>
+        /// Gets or sets the name of the machine.
+        /// </summary>
+        /// <value>The name of the machine.</value>
         public string MachineName
         {
             get
@@ -60,6 +119,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the name of the application.
+        /// </summary>
+        /// <value>The name of the application.</value>
         public string AppName
         {
             get
@@ -72,6 +135,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the name of the application domain friendly.
+        /// </summary>
+        /// <value>The name of the application domain friendly.</value>
         public string AppDomainFriendlyName
         {
             get
@@ -84,6 +151,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the UTC time.
+        /// </summary>
+        /// <value>The UTC time.</value>
         public DateTime UTCTime
         {
             get
@@ -96,6 +167,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the os platform.
+        /// </summary>
+        /// <value>The os platform.</value>
         public string OSPlatform
         {
             get
@@ -108,6 +183,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the os version.
+        /// </summary>
+        /// <value>The os version.</value>
         public string OSVersion
         {
             get
@@ -120,6 +199,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the stack.
+        /// </summary>
+        /// <value>The stack.</value>
         public StackTrace Stack
         {
             get
@@ -132,6 +215,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the name of the user domain.
+        /// </summary>
+        /// <value>The name of the user domain.</value>
         public string UserDomainName
         {
             get
@@ -144,6 +231,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the name of the user.
+        /// </summary>
+        /// <value>The name of the user.</value>
         public string UserName
         {
             get
@@ -156,6 +247,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [user interactive].
+        /// </summary>
+        /// <value><c>true</c> if [user interactive]; otherwise, <c>false</c>.</value>
         public bool UserInteractive
         {
             get
@@ -168,6 +263,10 @@ namespace OM_Logger.Messages
             }
         }
 
+        /// <summary>
+        /// Gets or sets the runtime version.
+        /// </summary>
+        /// <value>The runtime version.</value>
         public string RuntimeVersion
         {
             get

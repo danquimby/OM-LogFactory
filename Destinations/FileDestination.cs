@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : OM-Logger
+// Author           : DanQuimby
+// Created          : 07-30-2015
+//
+// Last Modified By : DanQuimby
+// Last Modified On : 07-31-2015
+// ***********************************************************************
+// <copyright file="FileDestination.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,19 +21,52 @@ using System.Text;
 using System.Threading.Tasks;
 using OM_Logger.Messages;
 
+/// <summary>
+/// The Destinations namespace.
+/// </summary>
 namespace OM_Logger.Destinations
 {
+    /// <summary>
+    /// Class FileDestination.
+    /// </summary>
     public class FileDestination : Destination
     {
+        /// <summary>
+        /// The output
+        /// </summary>
         private StreamWriter Output;
+        /// <summary>
+        /// The absolute path
+        /// </summary>
         private string AbsolutePath;
 
+        /// <summary>
+        /// The log directory
+        /// </summary>
         public string LogDirectory = "log";
+        /// <summary>
+        /// The overwrite
+        /// </summary>
         public bool Overwrite = true;
+        /// <summary>
+        /// The automatic flush
+        /// </summary>
         public bool AutoFlush = true;
+        /// <summary>
+        /// The indent string
+        /// </summary>
         public string IndentString = "  ";
+        /// <summary>
+        /// The indent number
+        /// </summary>
         private int IndentNumber = 0;
 
+        /// <summary>
+        /// Gets the number.
+        /// </summary>
+        /// <param name="Number">The number.</param>
+        /// <param name="Length">The length.</param>
+        /// <returns>System.String.</returns>
         private string GetNumber(int Number, int Length)
         {
             int TempLength = Length;
@@ -31,12 +77,20 @@ namespace OM_Logger.Destinations
                 TempString = "0" + TempString;
             return TempString;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private string GetIndentString()
         {
             return GetIndentString(0);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Shrink"></param>
+        /// <param name="IndentChar"></param>
+        /// <returns></returns>
         private string GetIndentString(int Shrink, char IndentChar = ' ')
         {
             string TempString = "";
@@ -45,6 +99,9 @@ namespace OM_Logger.Destinations
             return TempString;
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
@@ -71,6 +128,10 @@ namespace OM_Logger.Destinations
             Output.AutoFlush = AutoFlush;
         }
 
+        /// <summary>
+        /// Enters the method.
+        /// </summary>
+        /// <param name="EMM">The emm.</param>
         public override void EnterMethod(EnterMethodMessage EMM)
         {
             Output.WriteLine("{0}{1} >{2}",
@@ -80,6 +141,10 @@ namespace OM_Logger.Destinations
             IndentNumber += 2;
         }
 
+        /// <summary>
+        /// Exits the method.
+        /// </summary>
+        /// <param name="EMM">The emm.</param>
         public override void ExitMethod(ExitMethodMessage EMM)
         {
             IndentNumber -= 2;
@@ -89,6 +154,10 @@ namespace OM_Logger.Destinations
               EMM.MethodName);
         }
 
+        /// <summary>
+        /// Sends the string.
+        /// </summary>
+        /// <param name="SM">The sm.</param>
         public override void SendString(StringMessage SM)
         {
             ArrayList TempArray = new ArrayList(SM.Message.Split('\r', '\n'));
@@ -111,6 +180,10 @@ namespace OM_Logger.Destinations
             }
         }
 
+        /// <summary>
+        /// Sends the value.
+        /// </summary>
+        /// <param name="VM">The vm.</param>
         public override void SendValue(ValueMessage VM)
         {
             if (VM.Value == null)
@@ -145,6 +218,10 @@ namespace OM_Logger.Destinations
             }
         }
 
+        /// <summary>
+        /// Sends the error.
+        /// </summary>
+        /// <param name="EM">The em.</param>
         public override void SendError(ErrorMessage EM)
         {
             ArrayList TempArray;
