@@ -58,7 +58,7 @@ namespace OM_Logger.Messages
       {
         if (_Message == string.Empty
           & _ExceptionObject != null)
-          return _ExceptionObject.Message;
+          return _ExceptionObject.ToString();
         else
           return _Message;
       }
