@@ -55,6 +55,14 @@ namespace OM_Logger
             value:
                 enum Type of output.
         */
+
+        public void CloseDestination()
+        {
+            foreach (Destination item in listDestination)
+            {
+                item.Close();
+            }
+        }
         public void AddDestination(TypeDestination Type)
         {
             Destination destination;

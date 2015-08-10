@@ -60,5 +60,9 @@ namespace OM_Logger.Destinations
         /// </summary>
         /// <param name="EM">The em.</param>
         public abstract void SendError(ErrorMessage EM);
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        public abstract void Close();
     }
 }

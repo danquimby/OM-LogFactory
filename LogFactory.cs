@@ -44,5 +44,15 @@ namespace OM_Logger
             ListCategories.Add(category);
             return category;
         }
+        /// <summary>
+        /// Closes the unused category.
+        /// </summary>
+        public static void CloseUnusedCategory()
+        {
+            foreach (Category item in ListCategories)
+            {
+                item.CloseDestination();
+            }
+        }
     }
 }

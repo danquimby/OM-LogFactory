@@ -33,6 +33,10 @@ namespace OM_Logger.Destinations
         /// </summary>
         private string AbsolutePath;
         /// <summary>
+        /// The absolute path with number
+        /// </summary>
+        private string AbsolutePathWithNumber;
+        /// <summary>
         /// The log directory
         /// </summary>
         public const string LogDirectory = "log";
@@ -48,6 +52,10 @@ namespace OM_Logger.Destinations
         /// The indent string
         /// </summary>
         public const string IndentString = "  ";
+        /// <summary>
+        /// The write message
+        /// </summary>
+        private bool WriteMessage = false;
         /// <summary>
         /// The indent number
         /// </summary>
@@ -103,21 +111,21 @@ namespace OM_Logger.Destinations
                 AbsolutePath = Path.Combine(Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(typeof(LogFactory)).Location), "Logfiles"), LogDirectory);
             AbsolutePath = Path.Combine(AbsolutePath, NameCategory);
 
-            string tempFileName = Path.Combine(AbsolutePath, Category + ".log");
+            AbsolutePathWithNumber = Path.Combine(AbsolutePath, Category + ".log");
             if (Directory.Exists(AbsolutePath))
             {
                 int tempInt = 0;
-                while (File.Exists(tempFileName))
+                while (File.Exists(AbsolutePathWithNumber))
                 {
                     tempInt++;
-                    tempFileName = Path.Combine(AbsolutePath, Category + "." + GetNumber(tempInt, 3) + ".log");
+                    AbsolutePathWithNumber = Path.Combine(AbsolutePath, Category + "." + GetNumber(tempInt, 3) + ".log");
                 }
             }
             else
             {
                 Directory.CreateDirectory(AbsolutePath);
             }
-            OutputStream = new StreamWriter(tempFileName, !Overwrite);
+            OutputStream = new StreamWriter(AbsolutePathWithNumber, !Overwrite);
             OutputStream.AutoFlush = AutoFlush;
         }
         /// <summary>
@@ -131,6 +139,7 @@ namespace OM_Logger.Destinations
               GetIndentString(IndentNumber),
               EMM.MethodName);
             IndentNumber += 2;
+            WriteMessage = true;
         }
         /// <summary>
         /// Exits the method.
@@ -143,6 +152,7 @@ namespace OM_Logger.Destinations
               EMM.UTCTime.ToString("dd-MM-yyyy") + " " + EMM.UTCTime.ToLongTimeString(),
               GetIndentString(IndentNumber),
               EMM.MethodName);
+            WriteMessage = true;
         }
         /// <summary>
         /// Sends the string.
@@ -169,6 +179,7 @@ namespace OM_Logger.Destinations
                       s);
                 }
             }
+            WriteMessage = true;
         }
         /// <summary>
         /// Sends the value.
@@ -182,6 +193,7 @@ namespace OM_Logger.Destinations
                   VM.UTCTime.ToString("dd-MM-yyyy") + " " + VM.UTCTime.ToLongTimeString(),
                   GetIndentString(),
                   VM.Message);
+                WriteMessage = true;
             }
             else
             {
@@ -205,6 +217,7 @@ namespace OM_Logger.Destinations
                           s);
                     }
                 }
+                WriteMessage = true;
             }
         }
         /// <summary>
@@ -213,8 +226,7 @@ namespace OM_Logger.Destinations
         /// <param name="EM">The em.</param>
         public override void SendError(ErrorMessage EM)
         {
-            ArrayList tempArray;
-            tempArray = EM.ExceptionObject == null ? 
+            ArrayList tempArray = EM.ExceptionObject == null ? 
                 new ArrayList(EM.Message.Split('\r', '\n')) : 
                 new ArrayList(EM.ExceptionObject.ToString().Split('\r', '\n'));
 
@@ -237,6 +249,21 @@ namespace OM_Logger.Destinations
                       s);
                 }
             }
+            WriteMessage = true;
+        }
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        public override void Close()
+        {
+            if (!WriteMessage)
+            {
+                if (File.Exists(AbsolutePathWithNumber))
+                {
+                    OutputStream.Close();
+                    File.Delete(AbsolutePathWithNumber);
+                }
+            }            
         }
     }
 }

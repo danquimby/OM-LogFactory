@@ -131,5 +131,10 @@ namespace OM_Logger.Destinations
         {
             Console.WriteLine("LOG: " + GetIndentString() + " ERROR: " + EM.Message);
         }
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        public override void Close() { }
+
     }
 }
