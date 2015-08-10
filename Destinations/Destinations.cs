@@ -11,17 +11,8 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using OM_Logger.Messages;
 
-/// <summary>
-/// The Destinations namespace.
-/// </summary>
 namespace OM_Logger.Destinations
 {
     /// <summary>
@@ -37,7 +28,7 @@ namespace OM_Logger.Destinations
         /// <summary>
         /// Initializes this instance.
         /// </summary>
-        public virtual void Initialize()
+        public virtual void Initialize(string NameCategory)
         {}
 
         /// <summary>

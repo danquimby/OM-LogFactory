@@ -13,17 +13,10 @@
 // ***********************************************************************
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using OM_Logger.Messages;
 
-/// <summary>
-/// The Destinations namespace.
-/// </summary>
 namespace OM_Logger.Destinations
 {
     /// <summary>
@@ -34,16 +27,15 @@ namespace OM_Logger.Destinations
         /// <summary>
         /// The output
         /// </summary>
-        private StreamWriter Output;
+        private StreamWriter OutputStream;
         /// <summary>
         /// The absolute path
         /// </summary>
         private string AbsolutePath;
-
         /// <summary>
         /// The log directory
         /// </summary>
-        public string LogDirectory = "log";
+        public const string LogDirectory = "log";
         /// <summary>
         /// The overwrite
         /// </summary>
@@ -55,12 +47,11 @@ namespace OM_Logger.Destinations
         /// <summary>
         /// The indent string
         /// </summary>
-        public string IndentString = "  ";
+        public const string IndentString = "  ";
         /// <summary>
         /// The indent number
         /// </summary>
-        private int IndentNumber = 0;
-
+        private int IndentNumber;
         /// <summary>
         /// Gets the number.
         /// </summary>
@@ -69,13 +60,13 @@ namespace OM_Logger.Destinations
         /// <returns>System.String.</returns>
         private string GetNumber(int Number, int Length)
         {
-            int TempLength = Length;
-            string TempString = Number.ToString();
-            TempString = TempString.Trim();
-            TempLength -= TempString.Length;
-            for (int i = 0; i < TempLength; i++)
-                TempString = "0" + TempString;
-            return TempString;
+            int tempLength = Length;
+            string tempString = Number.ToString();
+            tempString = tempString.Trim();
+            tempLength -= tempString.Length;
+            for (int i = 0; i < tempLength; i++)
+                tempString = "0" + tempString;
+            return tempString;
         }
         /// <summary>
         /// 
@@ -93,54 +84,54 @@ namespace OM_Logger.Destinations
         /// <returns></returns>
         private string GetIndentString(int Shrink, char IndentChar = ' ')
         {
-            string TempString = "";
+            string tempString = "";
             for (int i = 0; i < Shrink; i++)
-                TempString += IndentChar;
-            return TempString;
+                tempString += IndentChar;
+
+            return tempString;
         }
 
         /// <summary>
         /// Initializes this instance.
         /// </summary>
-        public override void Initialize()
+        public override void Initialize(string NameCategory)
         {
-            base.Initialize();
+            base.Initialize(NameCategory);
             if (Assembly.GetEntryAssembly() != null && !Assembly.GetEntryAssembly().GlobalAssemblyCache)
                 AbsolutePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), LogDirectory);
             else
                 AbsolutePath = Path.Combine(Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(typeof(LogFactory)).Location), "Logfiles"), LogDirectory);
+            AbsolutePath = Path.Combine(AbsolutePath, NameCategory);
 
-            string TempFileName = Path.Combine(AbsolutePath, Category + ".log");
+            string tempFileName = Path.Combine(AbsolutePath, Category + ".log");
             if (Directory.Exists(AbsolutePath))
             {
-                int TempInt = 0;
-                while (File.Exists(TempFileName))
+                int tempInt = 0;
+                while (File.Exists(tempFileName))
                 {
-                    TempInt++;
-                    TempFileName = Path.Combine(AbsolutePath, Category + "." + GetNumber(TempInt, 3) + ".log");
+                    tempInt++;
+                    tempFileName = Path.Combine(AbsolutePath, Category + "." + GetNumber(tempInt, 3) + ".log");
                 }
             }
             else
             {
                 Directory.CreateDirectory(AbsolutePath);
             }
-            Output = new StreamWriter(TempFileName, !Overwrite);
-            Output.AutoFlush = AutoFlush;
+            OutputStream = new StreamWriter(tempFileName, !Overwrite);
+            OutputStream.AutoFlush = AutoFlush;
         }
-
         /// <summary>
         /// Enters the method.
         /// </summary>
         /// <param name="EMM">The emm.</param>
         public override void EnterMethod(EnterMethodMessage EMM)
         {
-            Output.WriteLine("{0}{1} >{2}",
+            OutputStream.WriteLine("{0}{1} >{2}",
               EMM.UTCTime.ToString("dd-MM-yyyy") + " " + EMM.UTCTime.ToLongTimeString(),
               GetIndentString(IndentNumber),
               EMM.MethodName);
             IndentNumber += 2;
         }
-
         /// <summary>
         /// Exits the method.
         /// </summary>
@@ -148,38 +139,37 @@ namespace OM_Logger.Destinations
         public override void ExitMethod(ExitMethodMessage EMM)
         {
             IndentNumber -= 2;
-            Output.WriteLine("{0}{1} <{2}",
+            OutputStream.WriteLine("{0}{1} <{2}",
               EMM.UTCTime.ToString("dd-MM-yyyy") + " " + EMM.UTCTime.ToLongTimeString(),
               GetIndentString(IndentNumber),
               EMM.MethodName);
         }
-
         /// <summary>
         /// Sends the string.
         /// </summary>
         /// <param name="SM">The sm.</param>
         public override void SendString(StringMessage SM)
         {
-            ArrayList TempArray = new ArrayList(SM.Message.Split('\r', '\n'));
-            string TempString = new String(' ', SM.UTCTime.ToString("dd-MM-yyyy").Length + 1 + SM.UTCTime.ToLongTimeString().Length);
-            TempString += "";
-            TempString += GetIndentString();
-            Output.WriteLine("{0}{1} {2}",
+            ArrayList tempArray = new ArrayList(SM.Message.Split('\r', '\n'));
+            string tempString = new String(' ', SM.UTCTime.ToString("dd-MM-yyyy").Length + 1 + SM.UTCTime.ToLongTimeString().Length);
+            tempString += "";
+            tempString += GetIndentString();
+            OutputStream.WriteLine("{0}{1} {2}",
               SM.UTCTime.ToString("dd-MM-yyyy") + " " + SM.UTCTime.ToLongTimeString(),
               GetIndentString(),
-              TempArray[0].ToString());
-            TempArray.RemoveAt(0);
-            foreach (String s in TempArray)
+              tempArray[0].ToString());
+            tempArray.RemoveAt(0);
+
+            foreach (String s in tempArray)
             {
                 if (s.Trim('\r', '\n').Length != 0)
                 {
-                    Output.WriteLine("{0} {1}",
-                      TempString,
+                    OutputStream.WriteLine("{0} {1}",
+                      tempString,
                       s);
                 }
             }
         }
-
         /// <summary>
         /// Sends the value.
         /// </summary>
@@ -188,63 +178,62 @@ namespace OM_Logger.Destinations
         {
             if (VM.Value == null)
             {
-                Output.WriteLine("{0}{1} {2} = **NULL**",
+                OutputStream.WriteLine("{0}{1} {2} = **NULL**",
                   VM.UTCTime.ToString("dd-MM-yyyy") + " " + VM.UTCTime.ToLongTimeString(),
                   GetIndentString(),
                   VM.Message);
             }
             else
             {
-                ArrayList TempArray = new ArrayList(VM.Value.ToString().Split('\r', '\n'));
-                string TempString = new String(' ', VM.UTCTime.ToString("dd-MM-yyyy").Length + 1 + VM.UTCTime.ToLongTimeString().Length);
-                TempString += "";
-                TempString += GetIndentString();
-                TempString += " " + new String(' ', VM.Message.Length) + "  ";
-                Output.WriteLine("{0}{1} {2} = '{3}'",
+                ArrayList tempArray = new ArrayList(VM.Value.ToString().Split('\r', '\n'));
+                string tempString = new String(' ', VM.UTCTime.ToString("dd-MM-yyyy").Length + 1 + VM.UTCTime.ToLongTimeString().Length);
+                tempString += "";
+                tempString += GetIndentString();
+                tempString += " " + new String(' ', VM.Message.Length) + "  ";
+                OutputStream.WriteLine("{0}{1} {2} = '{3}'",
                   VM.UTCTime.ToString("dd-MM-yyyy") + " " + VM.UTCTime.ToLongTimeString(),
                   GetIndentString(),
                   VM.Message,
-                  TempArray[0].ToString());
-                TempArray.RemoveAt(0);
-                foreach (String s in TempArray)
+                  tempArray[0].ToString());
+                tempArray.RemoveAt(0);
+                foreach (String s in tempArray)
                 {
                     if (s.Trim('\r', '\n').Length != 0)
                     {
-                        Output.WriteLine("{0} '{1}'",
-                          TempString,
+                        OutputStream.WriteLine("{0} '{1}'",
+                          tempString,
                           s);
                     }
                 }
             }
         }
-
         /// <summary>
         /// Sends the error.
         /// </summary>
         /// <param name="EM">The em.</param>
         public override void SendError(ErrorMessage EM)
         {
-            ArrayList TempArray;
-            if (EM.ExceptionObject == null)
-                TempArray = new ArrayList(EM.Message.Split('\r', '\n'));
-            else
-                TempArray = new ArrayList(EM.ExceptionObject.ToString().Split('\r', '\n'));
+            ArrayList tempArray;
+            tempArray = EM.ExceptionObject == null ? 
+                new ArrayList(EM.Message.Split('\r', '\n')) : 
+                new ArrayList(EM.ExceptionObject.ToString().Split('\r', '\n'));
 
-            string TempString = new String(' ', EM.UTCTime.ToString("dd-MM-yyyy").Length + 1 + EM.UTCTime.ToLongTimeString().Length);
-            TempString += "";
-            TempString += GetIndentString();
-            TempString += "       ";
-            Output.WriteLine("{0}{1} ERROR: {2}",
+            string tempString = new String(' ', EM.UTCTime.ToString("dd-MM-yyyy").Length + 1 + EM.UTCTime.ToLongTimeString().Length);
+            tempString += "";
+            tempString += GetIndentString();
+            tempString += "       ";
+            OutputStream.WriteLine("{0}{1} ERROR: {2}",
               EM.UTCTime.ToString("dd-MM-yyyy") + " " + EM.UTCTime.ToLongTimeString(),
               GetIndentString(),
-              TempArray[0].ToString());
-            TempArray.RemoveAt(0);
-            foreach (String s in TempArray)
+              tempArray[0].ToString());
+            tempArray.RemoveAt(0);
+
+            foreach (String s in tempArray)
             {
                 if (s.Trim('\r', '\n').Length != 0)
                 {
-                    Output.WriteLine("{0} {1}",
-                      TempString,
+                    OutputStream.WriteLine("{0} {1}",
+                      tempString,
                       s);
                 }
             }

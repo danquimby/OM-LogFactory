@@ -53,19 +53,19 @@ namespace OM_Logger
         
             Parameters:
             value:
-                enum type of output.
+                enum Type of output.
         */
-        public void AddDestination(TypeDestination type)
+        public void AddDestination(TypeDestination Type)
         {
             Destination destination;
-            if (type == TypeDestination.TypeFile)
+            if (Type == TypeDestination.TypeFile)
                 destination = new FileDestination();
-            else if (type == TypeDestination.TypeConsole)
+            else if (Type == TypeDestination.TypeConsole)
                 destination = new ConsoleDestination();
             else return;
 
             destination.Category = Name;
-            destination.Initialize();
+            destination.Initialize(Name);
             listDestination.Add(destination);
         }
         /*
@@ -77,10 +77,10 @@ namespace OM_Logger
                 Message to output.
         
         */
-        public void SendString(string StrToSend)
+        public void SendString(string MessageToSend)
         {
             StringMessage SM = new StringMessage();
-            SM.Message = StrToSend;
+            SM.Message = MessageToSend;
             SM.InitializeNewMessage();
             foreach (Destination d in listDestination)
             {

@@ -12,15 +12,8 @@
 // <summary></summary>
 // ***********************************************************************
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OM_Logger.Messages;
 
-/// <summary>
-/// The Destinations namespace.
-/// </summary>
 namespace OM_Logger.Destinations
 {
     /// <summary>
@@ -37,8 +30,6 @@ namespace OM_Logger.Destinations
         /// The indent size
         /// </summary>
         public int IndentSize = 2;
-
-
         /// <summary>
         /// Gets the indent string.
         /// </summary>
@@ -48,26 +39,21 @@ namespace OM_Logger.Destinations
         private string GetIndentString(int ShrinkIt, char IndentChar = ' ')
         {
 
-            string OneIndentString = "";
+            string oneIndentString = "";
             for (int i = 1; i <= ShrinkIt; i++)
-                OneIndentString += IndentChar;
+                oneIndentString += IndentChar;
 
-            string TempString = "";
+            string tempString = "";
             for (int i = 1; i <= LogFactory.Indent; i++)
-                TempString += OneIndentString;
+                tempString += oneIndentString;
 
-            if (TempString.Length < ShrinkIt)
-            {
-                TempString = "";
-            }
-            else
-            {
+            if (tempString.Length < ShrinkIt)
+                tempString = "";
+            else 
                 if (ShrinkIt != 0)
-                {
-                    TempString = TempString.Remove(0, (IndentSize / ShrinkIt));
-                }
-            }
-            return TempString;
+                    tempString = tempString.Remove(0, (IndentSize / ShrinkIt));
+            
+            return tempString;
         }
 
         /// <summary>
@@ -78,15 +64,14 @@ namespace OM_Logger.Destinations
         /// <returns>System.String.</returns>
         private string GetSingleIndentString(int Shrink, char IndentChar = ' ')
         {
-            string OneIndentString = "";
+            string oneIndentString = "";
             for (int i = 1; i <= Shrink; i++)
-                OneIndentString += IndentChar;
-            if (Shrink != 0)
-            {
-                OneIndentString = OneIndentString.Remove(0, (IndentSize / Shrink));
-            }
+                oneIndentString += IndentChar;
 
-            return OneIndentString;
+            if (Shrink != 0)
+                oneIndentString = oneIndentString.Remove(0, (IndentSize / Shrink));
+
+            return oneIndentString;
         }
 
         /// <summary>
@@ -126,7 +111,6 @@ namespace OM_Logger.Destinations
         {
             Console.WriteLine("LOG: " + GetSingleIndentString(IndentNumber, '.') + SM.Message);
         }
-
         /// <summary>
         /// Sends the value.
         /// </summary>
@@ -134,13 +118,9 @@ namespace OM_Logger.Destinations
         public override void SendValue(ValueMessage VM)
         {
             if (VM.Value == null)
-            {
                 Console.WriteLine("LOG: " + GetIndentString() + String.Format("{0} = NULL", VM.Message));
-            }
             else
-            {
                 Console.WriteLine("LOG: " + GetIndentString() + String.Format("{0} = '{1}'", VM.Message, VM.Value.ToString()));
-            }
         }
 
         /// <summary>
