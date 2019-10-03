@@ -8,6 +8,7 @@ using OM_Logger.Messages;
 namespace OM_Logger
 {
     // new change
+    // more change
     public enum TypeDestination
     {
         TypeConsole,
