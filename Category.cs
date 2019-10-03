@@ -7,10 +7,6 @@ using OM_Logger.Messages;
 
 namespace OM_Logger
 {
-    /*
-         Summary:
-            All types of Destination.
-    */
 
     public enum TypeDestination
     {
